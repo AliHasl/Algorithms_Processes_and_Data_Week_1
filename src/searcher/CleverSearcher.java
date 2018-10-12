@@ -1,10 +1,13 @@
 package searcher;
 
 /**
+ * @author Alistair Haslam
+ * @version 1.0
+ * @date 12/10/2018
+ *
  * Created by u1773783 on 02/10/2018.
  */
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class CleverSearcher extends Searcher {
@@ -12,8 +15,6 @@ public class CleverSearcher extends Searcher {
     CleverSearcher(int[] array, int k) {
         super(array, k);
     }
-
-
 
     @Override
     public int findElement() throws IndexingError {
@@ -23,49 +24,47 @@ public class CleverSearcher extends Searcher {
         if (k <= 0 || k > array.length) {
             throw new IndexingError();
         }
-    //Array is initilized to 0 by default
+        //Declares shortArray length of k which holds the first k elements which is then sorted.
         int[] shortArray = new int[k];
-        //Initialise the short array to the initial array
         for(int count = 0; count < shortArray.length; count ++)
         {
             shortArray[count] = array[count];
         }
         Arrays.sort(shortArray);
-        //return shortArray[0];
 
-
-
+        /*
+         * Cycles through the randomised array from element k to the end of the array
+         */
         for(int i = shortArray.length; i < array.length; i++) {
-            //Second loop to go through shortArray
 
+            /*Checks to see if Array[i] is the largest element in shortArray. If so will insert Array[i]
+             *in the end and shift the other values down.
+             */
             if (array[i] >= shortArray[shortArray.length - 1]) {
                 for (int x = 0; x < shortArray.length - 1; x++) {
-                    shortArray[x] = shortArray[x + 1];
+                    shortArray[x] = shortArray[x + 1];              //Shifts shortArray values down.
                 }
                 shortArray[shortArray.length - 1] = array[i];
             } else {
+                //Cycle through the small array
                 for (int n = 0; n < shortArray.length; n++) {
-                    if(n != shortArray.length - 1) {
-                        if (array[i] >= shortArray[n] && array[i] < shortArray[n + 1]) {
-                        //Check if it is the first element
-                        // if(n != shortArray.length) {
-                        //shift previous numbers
+                    //If Array[i] is smaller than the current shortArray[0] then break this loop.
+                    if(array[i] < shortArray[0]){
+                        break;
+                    }
+                    //Find the position of Array[i] in the shortArray. Shift the elements from the Array[n -1]
+                    //position down and insert Array[i] in the correct place.
+                    if (array[i] < shortArray[n + 1]) {
+
                         for (int x = 0; x < n; x++) {
                             shortArray[x] = shortArray[x + 1];
                         }
-                        // }
-                        //insert new number
                         shortArray[n] = array[i];
-                        //Arrays.sort(shortArray);
                         break;
                     }
-                    }
-                    //break;
                 }
             }
         }
-        return shortArray[0];
+        return shortArray[0];       //Returns the kth element
     }
-
-
 }
